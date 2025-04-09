@@ -46,23 +46,45 @@ export async function SearchCategory(q: string) {
   }
 }
 
+interface baseMenu {
+  id: number;
+  title: string;
+  url: string;
+  order: number | null;
+  parentId: number | null;
+}
+interface menuLevel2 extends baseMenu {
+  children: baseMenu[];
+}
+
+interface menuMap extends menuLevel2 {
+  children: menuLevel2[];
+}
+
 export async function getMainMenu(slug: string) {
   const menu = await prisma.menu.findUnique({
     where: { slug: slug },
     select: {
       menuItems: {
+        omit: {
+          createdAt: true,
+          updatedAt: true,
+          menuId: true,
+        },
         orderBy: { order: "asc" },
       },
     },
   });
 
-  const newItems = {
-    items: buildHierarchyOptimized(menu?.menuItems),
-  };
-  return newItems;
+  if (menu?.menuItems) {
+    const newItems = {
+      items: buildHierarchyOptimized(menu.menuItems),
+    };
+    return newItems;
+  }
 }
 
-function buildHierarchyOptimized(items) {
+function buildHierarchyOptimized(items: baseMenu[]): menuMap[] {
   const map = new Map(); // Faster lookup than plain object
   const roots = []; // Top-level items (parentId = null)
 
@@ -84,7 +106,7 @@ function buildHierarchyOptimized(items) {
   }
 
   // Sort the hierarchy (optional, if order matters)
-  const sortByOrder = (a, b) => a.order - b.order;
+  const sortByOrder = (a: any, b: any) => a.order - b.order;
   roots.sort(sortByOrder);
   map.forEach((item) => item.children.sort(sortByOrder));
 

@@ -8,7 +8,7 @@ import { getMainMenu } from "@/app/api/category/Category";
 export default async function Header() {
   const session = await auth();
   const menu = await getMainMenu("main-menu");
-  // 
+  //
   return (
     <>
       <svg className="d-none">
