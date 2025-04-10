@@ -55,7 +55,6 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
           <script src="/assets/js/plugins/swiper.min.js" defer async></script>
           <script src="/assets/js/plugins/countdown.js" defer async></script>
           <script src="/assets/js/theme.js" defer async></script>
-          {/* <script defer async src="https://www.paypal.com/sdk/js?client-id=AagEF3G7GS6968b1MyyeaiIMManUumRlg9CsRZw6x7ZB2PYFV7onZAMw5aXh5t3GS6i5Vgfvn2AlyM_O&currency=EUR"></script> */}
         </html>
       </AppProvider>
     </SessionProvider>

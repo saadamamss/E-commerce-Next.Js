@@ -7,26 +7,12 @@ import { useCallback } from "react";
 import CartItemRemove from "./components/CartItemRemove";
 import CouponForm from "./components/CouponForm";
 import Link from "next/link";
+import EmptyCart from "./components/EmptyCart";
 
 function CartPage() {
   const { cart } = useAppContext();
   if (!cart) {
-    return (
-      <main className="pt-90">
-        <div className="mb-4 pb-4"></div>
-        <div className="container">
-          <div className="flex justify-center items-center border-2 py-5 rounded-md">
-            <div>
-              <h2>Your cart is empty</h2>
-              <br />
-              <Link href="/shop" className="btn bg-black text-white">
-                continue shopping
-              </Link>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
+    return <EmptyCart />;
   }
 
   //

@@ -5,6 +5,7 @@ import { addItemToCart } from "@/app/api/cart/Cart";
 import { useAppContext } from "@/app/AppProvider";
 import Image from "next/image";
 import Link from "next/link";
+import AddToWishList from "@/components/AddToWishList";
 
 const AddToCart = memo(function AddToCart({ product }: { product: string }) {
   const prod = JSON.parse(product);
@@ -402,19 +403,13 @@ const AddToCart = memo(function AddToCart({ product }: { product: string }) {
           {error && <div className="text-red-500">{error}</div>}
 
           {/* Wishlist Link */}
-          <div className="product-single__addtolinks">
-            <Link href="#" className="menu-link menu-link_us-s add-to-wishlist">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <use href="#icon_heart" />
-              </svg>
+          <div className="product-single__addtolinks mb-3">
+            <AddToWishList
+              productId={prod.id}
+              className="add-to-wishlist flex items-center gap-2 "
+            >
               <span>Add to Wishlist</span>
-            </Link>
+            </AddToWishList>
           </div>
         </div>
         <div className="product-single__meta-info">

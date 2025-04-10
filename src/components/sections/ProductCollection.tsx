@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Addcartbtn from "../Addcartbtn";
 import Addcartbtn_nd from "../Addcartbtn_nd";
+import AddToWishList from "../AddToWishList";
 
 export default async function ProductsCollection({ data }: { data: string }) {
   const parsedData = JSON.parse(data);
@@ -36,7 +37,7 @@ export default async function ProductsCollection({ data }: { data: string }) {
               </div>
 
               <div className="pc__info position-relative">
-                <h6 className="pc__title">
+                <h6 className="pc__title mb-2">
                   <Link href={`/${item.slug}/${item.SKU}`}>{item.name}</Link>
                 </h6>
                 <div className="product-card__price d-flex align-items-center">
@@ -48,20 +49,7 @@ export default async function ProductsCollection({ data }: { data: string }) {
                 <div className="anim_appear-bottom position-absolute bottom-0 start-0 d-none d-sm-flex align-items-center justify-content-between w-100 bg-body">
                   <Addcartbtn_nd product={JSON.stringify(item)} />
 
-                  <button
-                    className="pc__btn-wl bg-transparent border-0 js-add-wishlist"
-                    title="Add To Wishlist"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 20 20"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <use href="#icon_heart" />
-                    </svg>
-                  </button>
+                  <AddToWishList productId={item.id} className="pc__btn-wl" />
                 </div>
               </div>
             </div>

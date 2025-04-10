@@ -79,7 +79,7 @@ export default function DetailsForm() {
                   type="email"
                   className="form-control"
                   name="email"
-                  defaultValue={"saadamams55@gmail.com"}
+                  defaultValue={""}
                 />
                 <label htmlFor="phone">Email *</label>
                 <span className="text-red">
@@ -97,7 +97,7 @@ export default function DetailsForm() {
                   type="text"
                   className="form-control"
                   name="zipCode"
-                  defaultValue={"1284"}
+                  defaultValue={""}
                 />
                 <label htmlFor="zipCode">Pincode *</label>
                 <span className="text-red">
@@ -115,7 +115,7 @@ export default function DetailsForm() {
                   type="text"
                   className="form-control"
                   name="province"
-                  defaultValue={"Daqahliah"}
+                  defaultValue={""}
                 />
                 <label htmlFor="province">State *</label>
                 <span className="text-red">
@@ -133,7 +133,7 @@ export default function DetailsForm() {
                   type="text"
                   className="form-control"
                   name="city"
-                  defaultValue={"Mansoura"}
+                  defaultValue={""}
                 />
                 <label htmlFor="city">Town / City *</label>
                 <span className="text-red">
@@ -151,7 +151,7 @@ export default function DetailsForm() {
                   type="text"
                   className="form-control"
                   name="country"
-                  defaultValue={"Egypt"}
+                  defaultValue={""}
                 />
                 <label htmlFor="country">Country *</label>
                 <span className="text-red">
@@ -169,7 +169,7 @@ export default function DetailsForm() {
                   type="text"
                   className="form-control"
                   name="address_1"
-                  defaultValue={"House 1"}
+                  defaultValue={""}
                 />
                 <label htmlFor="address_1">House no, Building Name *</label>
                 <span className="text-red">
@@ -187,7 +187,7 @@ export default function DetailsForm() {
                   type="text"
                   className="form-control"
                   name="address_2"
-                  defaultValue={"Nase st"}
+                  defaultValue={""}
                 />
                 <label htmlFor="address_2">Road Name, Area, Colony *</label>
                 <span className="text-red">
@@ -276,9 +276,6 @@ export default function DetailsForm() {
                   {/* <PaymentSection /> */}
                 </div>
               </label>
-
-              {/*  */}
-              {/*  */}
             </div>
             <div className="policy-text">
               Your personal data will be used to process your order, support

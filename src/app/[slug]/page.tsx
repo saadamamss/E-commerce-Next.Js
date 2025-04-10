@@ -13,6 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Product from "../api/products/Product";
 import { JsonValue } from "@prisma/client/runtime/library";
+import AddToWishList from "@/components/AddToWishList";
 
 // Define interfaces for better type safety
 interface PageFoundType {
@@ -196,20 +197,7 @@ export default async function ShowProducts({
                       <span className="money">EGP{Number(product.price)}</span>
                     </div>
 
-                    <button
-                      className="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                      title="Add To Wishlist"
-                    >
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <use href="#icon_heart" />
-                      </svg>
-                    </button>
+                    <AddToWishList productId={product.id}/>
                   </div>
                 </div>
               </div>

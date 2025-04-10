@@ -13742,6 +13742,9 @@ textarea.form-control.is-invalid {
   display: flex;
   color: #767676;
 }
+.pc__btn-wl span{
+  font-size: 16px !important;
+}
 
 .pc__btn-wl .flaticon,
 .btn-link .flaticon {
@@ -16300,7 +16303,6 @@ header .logo {
 }
 
 .logo__image {
-  
   max-width: 100%;
   max-height: 50px;
 }
@@ -16328,10 +16330,12 @@ header .logo {
   }
 }
 
-.header-tools__cart {
+.header-tools__cart,
+.header-tools__wishlist {
   position: relative;
 }
-.header-tools__cart .cart-amount {
+.header-tools__cart .cart-amount,
+.header-tools__wishlist .wishlist-amount {
   top: calc(0.25rem + 1em);
   left: calc(0.5rem + 1.4em);
   width: 1rem;
@@ -19239,6 +19243,9 @@ html.snap {
 button.js-add-wishlist.active .flaticon.flaticon-heart,
 a.add-to-wishlist.active .flaticon.flaticon-heart {
   color: #d6001c;
+}
+button.add-to-wishlist span {
+  font-size: 14px !important;
 }
 
 .quick-view {

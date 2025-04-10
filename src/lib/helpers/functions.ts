@@ -79,16 +79,6 @@ export async function productCategories(type: string, slug: string) {
 }
 
 export async function getCollectionProducts(id: string, maxcards: number) {
-  // const collection = await prisma.product.findMany({
-  //   where: {
-  //     collections: {
-  //       some: {
-  //         id: parseInt(id),
-  //       },
-  //     },
-  //   },
-  //   take: maxcards,
-  // });
 
   const collection = await prisma.collections.findUnique({
     where: { id: parseInt(id) },

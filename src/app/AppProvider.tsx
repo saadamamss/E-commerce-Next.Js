@@ -1,6 +1,5 @@
 "use client";
 import reviewsReducer from "@/lib/reducers/ReviewsList";
-import wishlistReducer from "@/lib/reducers/Wishlist";
 
 import React, {
   useContext,
@@ -70,9 +69,7 @@ type vvv = {
   cart: cartcon | null;
   setCart: React.Dispatch<React.SetStateAction<cartcon | null>>;
   ReviewsList: any[];
-  WishList: number[];
   dispatch: React.ActionDispatch<[action: any]>;
-  wishlistDispatch: React.ActionDispatch<[action: any]>;
 };
 const appcontext = createContext<vvv | null>(null);
 
@@ -92,15 +89,6 @@ export default function AppProvider({
     null
   );
   const [ReviewsList, dispatch] = useReducer(reviewsReducer, []);
-  const [WishList, wishlistDispatch] = useReducer(wishlistReducer, []);
-
-  useEffect(() => {
-    const bb = localStorage.getItem("wishlist");
-    if (bb) {
-      const ll = JSON.parse(bb) as number[];
-      wishlistDispatch({ type: "ADD_DEFAULT", payload: ll });
-    }
-  }, []);
 
   return (
     <appcontext.Provider
@@ -115,8 +103,6 @@ export default function AppProvider({
         setCart,
         ReviewsList,
         dispatch,
-        wishlistDispatch,
-        WishList,
       }}
     >
       {children}

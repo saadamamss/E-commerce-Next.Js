@@ -5,6 +5,7 @@ import Link from "next/link";
 import CartCount from "./CartCount";
 import SearchForm from "./SearchForm";
 import { getMainMenu } from "@/app/api/category/Category";
+import WishlistCount from "./WishlistCount";
 export default async function Header() {
   const session = await auth();
   const menu = await getMainMenu("main-menu");
@@ -66,14 +67,13 @@ export default async function Header() {
             </clipPath>
           </defs>
         </symbol>
-
         <symbol id="icon_cart" viewBox="0 0 20 20">
           <path
             d="M17.6562 4.6875H15.2755C14.9652 2.05164 12.7179 0 10 0C7.28215 0 5.0348 2.05164 4.72445 4.6875H2.34375C1.91227 4.6875 1.5625 5.03727 1.5625 5.46875V19.2188C1.5625 19.6502 1.91227 20 2.34375 20H17.6562C18.0877 20 18.4375 19.6502 18.4375 19.2188V5.46875C18.4375 5.03727 18.0877 4.6875 17.6562 4.6875ZM10 1.5625C11.8548 1.5625 13.3992 2.91621 13.6976 4.6875H6.30238C6.60082 2.91621 8.14516 1.5625 10 1.5625ZM16.875 18.4375H3.125V6.25H4.6875V8.59375C4.6875 9.02523 5.03727 9.375 5.46875 9.375C5.90023 9.375 6.25 9.02523 6.25 8.59375V6.25H13.75V8.59375C13.75 9.02523 14.0998 9.375 14.5312 9.375C14.9627 9.375 15.3125 9.02523 15.3125 8.59375V6.25H16.875V18.4375Z"
             fill="currentColor"
           />
         </symbol>
-        <symbol id="icon_heart" viewBox="0 0 20 20">
+        <symbol id="icon_heart" viewBox="0 0 20 20" fill="#222">
           <g clipPath="url(#clip0_6_54)">
             <path
               d="M18.3932 3.30806C16.218 1.13348 12.6795 1.13348 10.5049 3.30806L9.99983 3.81285L9.49504 3.30806C7.32046 1.13319 3.78163 1.13319 1.60706 3.30806C-0.523361 5.43848 -0.537195 8.81542 1.57498 11.1634C3.50142 13.3041 9.18304 17.929 9.4241 18.1248C9.58775 18.2578 9.78467 18.3226 9.9804 18.3226C9.98688 18.3226 9.99335 18.3226 9.99953 18.3223C10.202 18.3317 10.406 18.2622 10.575 18.1248C10.816 17.929 16.4982 13.3041 18.4253 11.1631C20.5371 8.81542 20.5233 5.43848 18.3932 3.30806ZM17.1125 9.98188C15.6105 11.6505 11.4818 15.0919 9.99953 16.3131C8.51724 15.0922 4.38944 11.6511 2.88773 9.98218C1.41427 8.34448 1.40044 6.01214 2.85564 4.55693C3.59885 3.81402 4.57488 3.44227 5.5509 3.44227C6.52693 3.44227 7.50295 3.81373 8.24616 4.55693L9.3564 5.66718C9.48856 5.79934 9.65516 5.87822 9.82999 5.90589C10.1137 5.96682 10.4216 5.88764 10.6424 5.66747L11.7532 4.55693C13.2399 3.07082 15.6582 3.07111 17.144 4.55693C18.5992 6.01214 18.5854 8.34448 17.1125 9.98188Z"
@@ -82,7 +82,7 @@ export default async function Header() {
           </g>
           <defs>
             <clipPath id="clip0_6_54">
-              <rect width="20" height="20" fill="white" />
+              <rect width="20" height="20" fill="#222" />
             </clipPath>
           </defs>
         </symbol>
@@ -288,7 +288,7 @@ export default async function Header() {
           </Link>
 
           <div className="logo">
-            <Link href="index.html">
+            <Link href="/">
               <Image
                 src="/assets/images/logo.png"
                 alt="Uomo"
@@ -621,7 +621,7 @@ export default async function Header() {
                 )}
               </div>
 
-              <Link href="/wishlist" className="header-tools__item">
+              <Link href="/wishlist" className="header-tools__item header-tools__wishlist">
                 <svg
                   width="20"
                   height="20"
@@ -631,6 +631,7 @@ export default async function Header() {
                 >
                   <use href="#icon_heart" />
                 </svg>
+                <WishlistCount />
               </Link>
 
               <Link

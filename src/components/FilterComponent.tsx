@@ -1,11 +1,16 @@
 "use client";
 import { Slider } from "@heroui/slider";
-import React, { memo, useCallback, useMemo, useReducer, useState } from "react";
+import React, { memo, useCallback, useReducer, useState } from "react";
 import { HeroUIProvider } from "@heroui/system";
 import MultiSelect from "@/components/MultiSelect";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { filterType, safeSplit, searchFilter } from "@/lib/helpers/functions";
 import Link from "next/link";
+import {
+  BRANDOPTIONS,
+  COLORS_OPTIONS,
+  SIZES_OPTIONS,
+} from "@/lib/helpers/constants";
 
 // Define action types for useReducer
 type Action =
@@ -42,6 +47,8 @@ const FilterComponent = memo(function FilterComponent({
   categories: { name: string; id: number; slug: string }[];
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   // Initialize state using useReducer
   const [state, dispatch] = useReducer(filterReducer, {
@@ -51,20 +58,8 @@ const FilterComponent = memo(function FilterComponent({
     minprice: 100,
     maxprice: 500,
   });
+
   const [priceRangechange, setPriceRangeChange] = useState(false);
-  // Memoize brand options to avoid re-renders
-  const brandOptions = useMemo(
-    () => [
-      { value: "addidas", label: "Addidas" },
-      { value: "balmain", label: "Balmain" },
-      { value: "balenciaga", label: "Balenciaga" },
-      { value: "burberry", label: "Burberry" },
-      { value: "kenzo", label: "Kenzo" },
-      { value: "givenchy", label: "Givenchy" },
-      { value: "zara", label: "Zara" },
-    ],
-    []
-  );
 
   // Memoized event handlers
   const handleColorFilter = useCallback(
@@ -103,31 +98,32 @@ const FilterComponent = memo(function FilterComponent({
   }, []);
 
   const ApplyFilter = useCallback(() => {
-    const url = new URL(window.location.href);
+    const params = new URLSearchParams(searchParams);
 
-    if (state.color?.length)
-      url.searchParams.set("color", state.color.join("--"));
-    else url.searchParams.delete("color");
+    if (state.color?.length) params.set("color", state.color.join("--"));
+    else params.delete("color");
 
-    if (state.size?.length) url.searchParams.set("size", state.size.join("--"));
-    else url.searchParams.delete("size");
+    if (state.size?.length) params.set("size", state.size.join("--"));
+    else params.delete("size");
 
-    if (state.brand?.length)
-      url.searchParams.set("brand", state.brand.join("--"));
-    else url.searchParams.delete("brand");
+    if (state.brand?.length) params.set("brand", state.brand.join("--"));
+    else params.delete("brand");
 
     if (priceRangechange) {
-      url.searchParams.set("minprice", state.minprice.toString());
-      url.searchParams.set("maxprice", state.maxprice.toString());
+      params.set("minprice", state.minprice.toString());
+      params.set("maxprice", state.maxprice.toString());
     } else {
-      url.searchParams.delete("minprice");
-      url.searchParams.delete("maxprice");
+      params.delete("minprice");
+      params.delete("maxprice");
     }
+    params.delete("page");
 
-    url.searchParams.delete("page");
-    router.push(url.href);
+    router.push(`${pathname}?${params.toString()}`);
   }, [state, router]);
-
+  //
+  const clearFilters = useCallback(() => {
+    router.replace(pathname);
+  }, [searchParams]);
   return (
     <div className="shop-sidebar side-sticky bg-body" id="shopFilter">
       <div className="aside-header d-flex d-lg-none align-items-center">
@@ -214,8 +210,8 @@ const FilterComponent = memo(function FilterComponent({
           >
             <div className="accordion-body px-1 pb-0">
               <MultiSelect
-                options={brandOptions}
-                defaultValue={brandOptions.filter((op) =>
+                options={BRANDOPTIONS}
+                defaultValue={BRANDOPTIONS.filter((op) =>
                   state.brand?.includes(op.value)
                 )}
                 onChange={handleBrandFilter}
@@ -257,18 +253,7 @@ const FilterComponent = memo(function FilterComponent({
           >
             <div className="accordion-body px-0 pb-0">
               <div className="d-flex flex-wrap" id="colorFilter">
-                {[
-                  "red",
-                  "green",
-                  "yellow",
-                  "orange",
-                  "blue",
-                  "pink",
-                  "purple",
-                  "black",
-                  "white",
-                  "brown",
-                ].map((color) => (
+                {COLORS_OPTIONS.map((color) => (
                   <input
                     key={color}
                     type="checkbox"
@@ -316,7 +301,7 @@ const FilterComponent = memo(function FilterComponent({
           >
             <div className="accordion-body px-0 pb-0">
               <div className="d-flex flex-wrap" id="sizeFilter">
-                {["xs", "s", "m", "l", "xl", "2xl"].map((size) => (
+                {SIZES_OPTIONS.map((size) => (
                   <input
                     key={size}
                     type="checkbox"
@@ -386,22 +371,22 @@ const FilterComponent = memo(function FilterComponent({
 
       <div className="block">
         <button
-          className="bg-slate-950 text-white hover:bg-slate-900 p-3 m-0 inline-block text-uppercase"
+          className="bg-stone-950 text-white hover:bg-stone-900 p-3 m-0 inline-block text-uppercase"
           onClick={() => {
-            // if (pageNo === 1) {
-            //   handleFetch();
-            //   return;
-            // }
-            // setPageNo(1);
             ApplyFilter();
           }}
         >
           Filter
         </button>
 
-        <button className="border-2 hover:bg-slate-950 hover:text-white p-3 mx-2 inline-block text-uppercase">
-          Clear Filter
-        </button>
+        {!!searchParams.size && (
+          <button
+            className="border-2 hover:bg-stone-900 hover:text-white p-3 mx-2 inline-block text-uppercase"
+            onClick={() => clearFilters()}
+          >
+            Clear Filter
+          </button>
+        )}
       </div>
     </div>
   );
