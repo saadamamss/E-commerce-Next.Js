@@ -1,7 +1,6 @@
 import { prisma } from "@/prisma";
 
 import { NextRequest } from "next/server";
-// import { rateLimiter } from "../routes";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;

@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useCallback, useState } from "react";
-import { removeCartItem } from "../../api/cart/Cart";
+import { removeCartItem } from "@/lib/models/Cart";
 import { useAppContext } from "../../AppProvider";
 import { useCookies } from "react-cookie";
 import { debounce, set } from "lodash";

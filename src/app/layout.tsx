@@ -9,7 +9,7 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import CartOverlay from "@/components/CartOverlay";
 import AppProvider from "./AppProvider";
-import { getCart } from "@/lib/actions/getCart";
+import { getCart } from "@/lib/models/Cart";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

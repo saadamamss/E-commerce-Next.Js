@@ -1,7 +1,8 @@
 import { prisma } from "@/prisma";
 import { NextRequest } from "next/server";
-import { ApiLimiter } from "../../routes";
-// import { rateLimiter } from "../../routes";
+import { ApiLimiter } from "@/lib/models/Api";
+
+
 export const revalidate = 3600; // Revalidate every hour (ISR)
 export async function GET(request: NextRequest) {
   const access = await ApiLimiter(request);

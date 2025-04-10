@@ -13,7 +13,7 @@ const initialstate = {
 export default function AddReviewForm({ id }: { id: number }) {
   const [review, setReview] = useState("");
   const [rate, setRate] = useState(0);
-  const { dispatch } = useAppContext();
+  const { dispatchReviewsList } = useAppContext();
   const [state, formAction, pending] = useActionState(AddReview, initialstate);
 
   function handleAddreviewAction(formData: FormData) {
@@ -21,9 +21,10 @@ export default function AddReviewForm({ id }: { id: number }) {
       formAction(formData);
     } catch (error) {}
   }
+  // 
   useEffect(() => {
     if (state.success) {
-      dispatch({ type: "ADD_TO_LIST", payload: { review: state.data } });
+      dispatchReviewsList({ type: "ADD_TO_LIST", payload: { review: state.data } });
     }
   }, [state?.success]);
 

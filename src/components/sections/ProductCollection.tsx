@@ -1,7 +1,6 @@
 import { getCollectionProducts } from "@/lib/helpers/functions";
 import Image from "next/image";
 import Link from "next/link";
-import Addcartbtn from "../Addcartbtn";
 import Addcartbtn_nd from "../Addcartbtn_nd";
 import AddToWishList from "../AddToWishList";
 
@@ -11,6 +10,9 @@ export default async function ProductsCollection({ data }: { data: string }) {
     parsedData.collectionId as string,
     parsedData.maxcards as number
   );
+
+  if (!products.length) return null;
+
   return (
     <section className="products-grid container">
       <h2 className="section-title text-center mb-3 pb-xl-3 mb-xl-4">

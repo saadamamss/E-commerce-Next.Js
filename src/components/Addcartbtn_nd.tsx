@@ -1,10 +1,10 @@
 "use client";
 
-import { memo, useCallback } from "react";
+import { memo } from "react";
 import { useAppContext } from "../app/AppProvider";
-import { Api } from "../app/api/routes";
+import { Api } from "../lib/models/Api";
 export default memo(function Addcartbtn({ product }: { product: string }) {
-  const { setCartDrawerOpen, setCartDrawercontent } = useAppContext();
+  const { setCartDrawerOpen, setcartDrawerContent } = useAppContext();
   const prod = JSON.parse(product);
   async function opendrawer() {
     try {
@@ -12,9 +12,7 @@ export default memo(function Addcartbtn({ product }: { product: string }) {
         params: { id: prod.id },
       });
 
-      console.log({ ...prod, ...response.data });
-
-      setCartDrawercontent({ ...prod, ...response.data });
+      setcartDrawerContent({ ...prod, ...response.data });
       setCartDrawerOpen(true);
     } catch (error) {
       console.log(error);

@@ -1,5 +1,5 @@
 "use client";
-import { SearchCategory } from "@/app/api/category/Category";
+import { SearchCategory } from "@/lib/models/Category";
 import { debounce } from "lodash";
 import Link from "next/link";
 import { memo, useCallback, useState, ChangeEvent } from "react";

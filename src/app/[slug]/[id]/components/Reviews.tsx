@@ -1,18 +1,18 @@
 "use client";
 import { useAppContext } from "@/app/AppProvider";
 import Image from "next/image";
-import { memo, useEffect, useReducer, useState } from "react";
+import { memo, useEffect, useMemo } from "react";
 
 export default memo(function ReviewsListComponent({
   reviews,
 }: {
   reviews: string;
 }) {
-  const parseReviews = JSON.parse(reviews);
-  const { ReviewsList, dispatch } = useAppContext();
+  const parseReviews = useMemo(() => JSON.parse(reviews), []);
+  const { ReviewsList, dispatchReviewsList } = useAppContext();
 
   useEffect(() => {
-    dispatch({ type: "SET_LIST", payload: { review: parseReviews } });
+    dispatchReviewsList({ type: "SET_LIST", payload: { review: parseReviews } });
   }, []);
   return (
     <>

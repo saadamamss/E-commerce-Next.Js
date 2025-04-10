@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import {
   findPage,
   hpp,
-  productCategories,
   searchParam,
 } from "@/lib/helpers/functions";
 import PageBuilder from "@/components/PageBuilder";
@@ -11,9 +10,10 @@ import Pagination from "@/components/Pagination";
 import Addcartbtn from "@/components/Addcartbtn";
 import Image from "next/image";
 import Link from "next/link";
-import Product from "../api/products/Product";
+import Product from "../../lib/models/Product";
 import { JsonValue } from "@prisma/client/runtime/library";
 import AddToWishList from "@/components/AddToWishList";
+import { productCategories } from "@/lib/models/Category";
 
 // Define interfaces for better type safety
 interface PageFoundType {

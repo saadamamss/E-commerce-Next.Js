@@ -288,7 +288,10 @@ export default function DetailsForm() {
             </div>
             <br />
             <p aria-live="polite">{state?.error}</p>
-            <button className="btn btn-primary btn-checkout">
+            <button
+              className="btn btn-primary btn-checkout"
+              disabled={!!pending}
+            >
               {pending ? "Loading..." : "PLACE ORDER"}
             </button>
           </div>

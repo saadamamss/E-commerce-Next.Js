@@ -239,10 +239,8 @@ export default function AccountDetailsForm() {
                 </span>
               </div>
               <div className="col-md-12">
-                {state?.error?.message && (
-                  <div className="alert alert-danger">
-                    {state?.error?.message}
-                  </div>
+                {state?.error && (
+                  <div className="alert alert-danger">{state?.msg}</div>
                 )}
 
                 {state?.success && (

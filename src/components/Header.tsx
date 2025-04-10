@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import CartCount from "./CartCount";
 import SearchForm from "./SearchForm";
-import { getMainMenu } from "@/app/api/category/Category";
+import { getMainMenu } from "@/lib/models/Category";
 import WishlistCount from "./WishlistCount";
 export default async function Header() {
   const session = await auth();

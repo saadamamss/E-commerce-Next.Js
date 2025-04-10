@@ -6,7 +6,6 @@ import AddReviewForm from "./components/AddReviewForm";
 import ReviewsListComponent from "./components/Reviews";
 import Link from "next/link";
 import Addcartbtn from "@/components/Addcartbtn";
-import VariantSelector from "./components/VariantSystem";
 
 export default async function ProductDetails({
   params,

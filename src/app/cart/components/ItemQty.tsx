@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, memo } from "react";
 import { debounce } from "lodash"; // For debouncing API calls
-import { updateItemQty } from "../../api/cart/Cart";
+import { updateItemQty } from "@/lib/models/Cart";
 import { useAppContext } from "../../AppProvider";
 
 // Memoize the component to prevent unnecessary re-renders

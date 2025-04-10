@@ -1,10 +1,9 @@
 "use client";
 
 import { useMemo, useState, useCallback, memo, useEffect } from "react";
-import { addItemToCart } from "@/app/api/cart/Cart";
+import { addItemToCart } from "@/lib/models/Cart";
 import { useAppContext } from "@/app/AppProvider";
 import Image from "next/image";
-import Link from "next/link";
 import AddToWishList from "@/components/AddToWishList";
 
 const AddToCart = memo(function AddToCart({ product }: { product: string }) {
@@ -12,46 +11,9 @@ const AddToCart = memo(function AddToCart({ product }: { product: string }) {
   const [quantity, setQuantity] = useState(1);
   const [load, setLoad] = useState(false);
   const [error, setError] = useState("");
-
   const { cart, setCart } = useAppContext();
 
-  const [mainVariantsAttribute, setmainVariantsAttribute] = useState<{
-    type: string;
-    values: string[];
-  }>({
-    type: prod.variantType,
-    values: [],
-  });
   // =============================================================================
-
-  // find variantType values product variants
-  // const variants = useMemo(() => {
-  //   let mainattrValues: string[] = [];
-  //   const mapped = prod.variants.map((variant) => {
-  //     const { id, SKU, quantity, images, price, ...rest } = variant;
-  //     Object.keys(rest).forEach((key) => {
-  //       !rest[key] && delete rest[key];
-  //     });
-  //     if (!mainattrValues.includes(variant[prod.variantType])) {
-  //       mainattrValues.push(variant[prod.variantType]);
-  //     }
-  //     return {
-  //       id,
-  //       price,
-  //       quantity,
-  //       SKU,
-  //       images: variant.images.split(","),
-  //       ...rest,
-  //     };
-  //   });
-
-  //   setmainVariantsAttribute({
-  //     type: prod.variantType,
-  //     values: mainattrValues,
-  //   });
-  //   return mapped;
-  // }, []);
-
   const subAttributes: { type: string; values: string[] }[] = useMemo(() => {
     const values = prod.variants?.reduce((acc, variant) => {
       const { id, SKU, quantity, images, price, ...rest } = variant;
@@ -131,10 +93,32 @@ const AddToCart = memo(function AddToCart({ product }: { product: string }) {
     [quantity, selectedVariant]
   );
 
-  useEffect(() => {
-    selectedVariant?.quantity < quantity && setQuantity(1);
-  }, [selectedVariant]);
+  // ==================================================================
+  const ImageInSide = useCallback(() => {
+    const images =
+      prod.variants?.find(
+        (k) => k[prod.variantType] === variantAttributes[prod.variantType]
+      )?.images ?? prod.images;
 
+    return images?.split(",").map((img, indx) => (
+      <div
+        className="swiper-slide product-single__image-item"
+        style={{ height: "auto" }}
+        key={indx}
+      >
+        <Image
+          loading="lazy"
+          className="h-auto"
+          src={`/assets/images/products/${img}`}
+          width="674"
+          height="674"
+          alt=""
+        />
+      </div>
+    ));
+  }, [variantAttributes]);
+
+  // ===========================================================
   // Add to cart action
   const AddToCartAction = useCallback(async () => {
     if (!selectedVariant.id) {
@@ -169,33 +153,14 @@ const AddToCart = memo(function AddToCart({ product }: { product: string }) {
     }
   }, [selectedVariant, quantity, setCart]);
 
-  const ImageInSide = useCallback(() => {
-    const images =
-      prod.variants?.find(
-        (k) => k[prod.variantType] === variantAttributes[prod.variantType]
-      )?.images ?? prod.images;
-
-    return images?.split(",").map((img, indx) => (
-      <div
-        className="swiper-slide product-single__image-item"
-        style={{ height: "auto" }}
-        key={indx}
-      >
-        <Image
-          loading="lazy"
-          className="h-auto"
-          src={`/assets/images/products/${img}`}
-          width="674"
-          height="674"
-          alt=""
-        />
-      </div>
-    ));
-  }, [variantAttributes]);
+  //=====================================================================
+  useEffect(() => {
+    selectedVariant?.quantity < quantity && setQuantity(1);
+    setError("");
+  }, [selectedVariant]);
 
   //
   //
-
   return (
     <>
       <div className="col-lg-7">
@@ -388,6 +353,9 @@ const AddToCart = memo(function AddToCart({ product }: { product: string }) {
               </button>
             </div>
 
+            {/* Error Message */}
+            {error && <div className="text-red-500">{error}</div>}
+
             {/* Add to Cart Button */}
             <button
               className="btn btn-primary btn-addtocart"
@@ -398,9 +366,6 @@ const AddToCart = memo(function AddToCart({ product }: { product: string }) {
               {load ? "Loading..." : "Add to Cart"}
             </button>
           </div>
-
-          {/* Error Message */}
-          {error && <div className="text-red-500">{error}</div>}
 
           {/* Wishlist Link */}
           <div className="product-single__addtolinks mb-3">

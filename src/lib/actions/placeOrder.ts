@@ -164,7 +164,7 @@ export async function PlaceOrder(prevState: any, formData: FormData) {
             select: {
               qty: true,
               product: { select: { name: true } },
-              varinat: true,
+              variant: true,
             },
           },
         },
@@ -175,7 +175,7 @@ export async function PlaceOrder(prevState: any, formData: FormData) {
         await prisma.variants.update({
           where: { id: item.variantId },
           data: {
-            qty: {
+            quantity: {
               decrement: item.qty,
             },
           },
@@ -209,9 +209,10 @@ export async function PlaceOrder(prevState: any, formData: FormData) {
     });
 
     await sendOrderTracking(validatedData.email, order);
+
     return { success: true };
   } catch (error) {
-    console.error("Error placing order:", error);
+    console.log(error);
     return {
       error: "Something went wrong. Please try again.",
     };

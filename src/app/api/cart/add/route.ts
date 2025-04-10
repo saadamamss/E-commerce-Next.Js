@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { isCouponStillValid, MappingCartItems } from "../Cart";
-import { ApiLimiter } from "../../routes";
+import { isCouponStillValid, MappingCartItems } from "@/lib/models/Cart";
+import { ApiLimiter } from "@/lib/models/Api";
 
 type CartItem = {
   key: string;

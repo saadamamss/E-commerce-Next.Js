@@ -1,5 +1,22 @@
 import { prisma } from "@/prisma";
-import { Api } from "../routes";
+import { Api } from "./Api";
+
+interface baseMenu {
+  id: number;
+  title: string;
+  url: string;
+  order: number | null;
+  parentId: number | null;
+}
+interface menuLevel2 extends baseMenu {
+  children: baseMenu[];
+}
+
+interface menuMap extends menuLevel2 {
+  children: menuLevel2[];
+}
+
+// =============================================================================
 
 export async function getRelatedCategory(slug: string) {
   const categories: { f0: number; f1: string; f2: string }[] =
@@ -17,6 +34,7 @@ export async function getRelatedCategory(slug: string) {
   return mapped;
 }
 
+// =============================================================================
 export async function getParentCategory() {
   const categories = await prisma.category.findMany({
     where: { parentId: null },
@@ -34,6 +52,9 @@ interface catg {
   slug: string;
   id: number;
 }
+
+// =============================================================================
+
 export async function SearchCategory(q: string) {
   try {
     const { data } = await Api.get(`category/search`, {
@@ -46,20 +67,18 @@ export async function SearchCategory(q: string) {
   }
 }
 
-interface baseMenu {
-  id: number;
-  title: string;
-  url: string;
-  order: number | null;
-  parentId: number | null;
-}
-interface menuLevel2 extends baseMenu {
-  children: baseMenu[];
+// =============================================================================
+export async function productCategories(type: string, slug: string) {
+  switch (type) {
+    case "category":
+      return await getRelatedCategory(slug);
+
+    default:
+      return await getParentCategory();
+  }
 }
 
-interface menuMap extends menuLevel2 {
-  children: menuLevel2[];
-}
+// =============================================================================
 
 export async function getMainMenu(slug: string) {
   const menu = await prisma.menu.findUnique({

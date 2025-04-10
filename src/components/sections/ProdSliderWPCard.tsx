@@ -1,5 +1,4 @@
 import { getCollectionProducts } from "@/lib/helpers/functions";
-import { prisma } from "@/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import Addcartbtn_nd from "../Addcartbtn_nd";
@@ -12,12 +11,13 @@ export default async function ProdSliderWPCard({ data }: { data: string }) {
     parsedData.maxcards as number
   );
 
-  if (!products.length) return <></>;
+  if (!products.length) return null;
 
   function getdate(date: string) {
     const d = new Date(date);
     return d.toLocaleDateString("en-GB").replaceAll("/", "-");
   }
+  // 
   return (
     <section className="hot-deals container">
       <h2 className="section-title  text-capitalize text-center mb-3 pb-xl-3 mb-xl-4">
@@ -153,7 +153,10 @@ export default async function ProdSliderWPCard({ data }: { data: string }) {
                       <div className="anim_appear-bottom position-absolute bottom-0 start-0 d-none d-sm-flex align-items-center w-100 justify-between bg-body">
                         <Addcartbtn_nd product={JSON.stringify(product)} />
 
-                        <AddToWishList productId={product.id} className="pc__btn-wl" />
+                        <AddToWishList
+                          productId={product.id}
+                          className="pc__btn-wl"
+                        />
                       </div>
                     </div>
                   </div>

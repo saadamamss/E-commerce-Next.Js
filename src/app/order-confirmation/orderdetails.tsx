@@ -2,14 +2,24 @@
 import { destroyCookie } from "nookies";
 
 // Delete a cookie
-import { memo, useEffect } from "react";
+import { memo, useEffect, useMemo } from "react";
 
 export default memo(function Orderdetails({ details }: { details: string }) {
-  const order = JSON.parse(details);
-
+  const order = useMemo(() => JSON.parse(details), []);
   useEffect(() => {
     destroyCookie(null, "orderconfirm", { path: "/" });
   }, []);
+
+  const itemAttributes = (item: any): string[] => {
+    const { id, SKU, price, images, quantity, ...rest } = item;
+    Object.keys(rest).forEach((key) => {
+      if (!rest[key]) delete rest[key];
+    });
+
+    return Object.values(rest);
+  };
+
+  //
 
   return (
     <main className="pt-90">
@@ -94,14 +104,15 @@ export default memo(function Orderdetails({ details }: { details: string }) {
                     <tr key={item.id}>
                       <td>
                         <span className="text-black">
-                          {item.product.name} x{item.qty}
+                          {item.product.name} (x{item.qty})
                         </span>
                         <p className="mb-0">
-                          {item.varinat.attr_1},{item.varinat.attr_2},
-                          {item.varinat.attr_3}
+                          {itemAttributes(item.variant)?.join(",")}
                         </p>
                       </td>
-                      <td align="right">EGP{item.qty * item.varinat.price}</td>
+                      <td align="right">
+                        EGP{Number(item.qty * item.variant.price).toFixed(2)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -110,21 +121,21 @@ export default memo(function Orderdetails({ details }: { details: string }) {
                 <tbody>
                   <tr>
                     <th>SUBTOTAL</th>
-                    <td>EGP{order.subTotal}</td>
+                    <td>EGP{Number(order.subTotal).toFixed(2)}</td>
                   </tr>
                   <tr>
                     <th>SHIPPING</th>
                     <td>{order.shipCost || "Free shipping"}</td>
                   </tr>
-                  {!!Number(order.discount) && (
+                  {!!order.discount && (
                     <tr>
                       <th>VAT</th>
-                      <td>EGP{order.discount}</td>
+                      <td>EGP{Number(order.discount).toFixed(2)}</td>
                     </tr>
                   )}
                   <tr>
                     <th>TOTAL</th>
-                    <td>EGP{order.total}</td>
+                    <td>EGP{Number(order.total).toFixed(2)}</td>
                   </tr>
                 </tbody>
               </table>

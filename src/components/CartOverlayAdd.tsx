@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useCallback, memo, useEffect } from "react";
-import { addItemToCart } from "@/app/api/cart/Cart";
+import { addItemToCart } from "@/lib/models/Cart";
 import { useAppContext } from "@/app/AppProvider";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import Link from "next/link";
 const CartOverlayAdd = memo(function CartOverlayAdd() {
   const {
     cart,
-    cartDrawercontent: prod,
+    cartDrawerContent: prod,
     setShowCartInDrawer,
   } = useAppContext();
   //
@@ -139,7 +139,7 @@ const CartOverlayAdd = memo(function CartOverlayAdd() {
       setError("No more items to add in the cart! ");
       return;
     }
-    
+
     setLoad(true);
     try {
       const response = await addItemToCart(

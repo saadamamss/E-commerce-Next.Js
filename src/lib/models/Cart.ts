@@ -1,6 +1,9 @@
+import { Api } from "@/lib/models/Api";
 import { prisma } from "@/prisma";
-import { Api } from "../routes";
+import jwt from "jsonwebtoken";
+//
 import * as cookie from "react-cookie";
+import getCookies from "../helpers/getCookie";
 
 type cartType = {
   items: { key: string; productId: number; variantId: number; qty: number }[];
@@ -10,6 +13,8 @@ type cartType = {
   subTotal: number;
   total: number;
 };
+
+// =============================================================================
 export const addItemToCart = async (
   productId: number,
   variantId: number,
@@ -31,6 +36,8 @@ export const addItemToCart = async (
   }
 };
 
+// =============================================================================
+
 export const updateItemQty = async (line: string, qty: number) => {
   const cookObj = new cookie.Cookies();
 
@@ -44,6 +51,8 @@ export const updateItemQty = async (line: string, qty: number) => {
   }
 };
 
+// =============================================================================
+
 export const removeCartItem = async (line: string) => {
   const cookObj = new cookie.Cookies();
 
@@ -55,6 +64,8 @@ export const removeCartItem = async (line: string) => {
     return { success: false, data: data.data };
   }
 };
+
+// =============================================================================
 
 export const MappingCartItems = async (cart: cartType) => {
   return await Promise.all(
@@ -99,6 +110,8 @@ export const MappingCartItems = async (cart: cartType) => {
   );
 };
 
+// =============================================================================
+
 export async function isCouponStillValid(cart: any) {
   ///// check is active  or expired
   const coupon = await prisma.coupon.findUnique({
@@ -110,4 +123,27 @@ export async function isCouponStillValid(cart: any) {
     },
   });
   return coupon;
+}
+
+// ==================================================
+export async function getCart() {
+  const cartToken = (await getCookies()).get("cart")?.value as string;
+
+  const cart = await new Promise<string | null>((resolve) => {
+    jwt.verify(
+      cartToken,
+      process.env.JWT_SECRET as string,
+      async (err, decode) => {
+        if (!err) {
+          const cartData = decode as jwt.JwtPayload & cartType;
+          const items = await MappingCartItems(cartData);
+
+          resolve(JSON.stringify({ ...cartData, items }));
+        }
+        resolve(null);
+      }
+    );
+  });
+
+  return cart;
 }

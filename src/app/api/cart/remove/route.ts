@@ -1,8 +1,9 @@
 import { cookies } from "next/headers";
-import { isCouponStillValid } from "../Cart";
+import { isCouponStillValid } from "@/lib/models/Cart";
 import jwt from "jsonwebtoken";
 import { prisma } from "@/prisma";
-import { ApiLimiter } from "../../routes";
+import { ApiLimiter } from "@/lib/models/Api";
+
 type CartItem = {
   key: string;
   productId: number;

@@ -1,41 +1,45 @@
 "use client";
 import reviewsReducer from "@/lib/reducers/ReviewsList";
-
 import React, {
   useContext,
   useState,
   createContext,
   useReducer,
-  useEffect,
   useMemo,
 } from "react";
-import { useCookies } from "react-cookie";
-type cartcon = {
-  items: {
-    SKU: string;
-    availableQty: number;
-    image: string;
-    key: string;
-    name: string;
-    price: number;
-    productId: number;
-    qty: number;
-    slug: string;
-    variant: {
-      [key: string]: string | number | null;
-      id: number;
-      images: string;
-      price: number;
-      quantity: number;
-    };
-  }[];
+
+// Define interfaces for better type safety and readability
+interface ProductVariant {
+  id: number;
+  images: string;
+  price: number;
+  quantity: number;
+  [key: string]: string | number | null; // Index signature for additional properties
+}
+
+interface CartItem {
+  SKU: string;
+  availableQty: number;
+  image: string;
+  key: string;
+  name: string;
+  price: number;
+  productId: number;
+  qty: number;
+  slug: string;
+  variant: ProductVariant;
+}
+
+interface CartState {
+  items: CartItem[];
   total: number;
   subTotal: number;
   couponApplied: boolean;
-  couponCode: string | undefined;
-  couponDiscount: number | undefined;
-};
-type prodtype = {
+  couponCode?: string;
+  couponDiscount?: number;
+}
+
+interface Product {
   id: number;
   SKU: string;
   salePrice: number;
@@ -49,67 +53,71 @@ type prodtype = {
   avgRate: number;
   noReview: number;
   shortDesc: string;
-  variants: {
-    [key: string]: string | number | null;
-    id: number;
-    images: string;
-    price: number;
-    quantity: number;
-  }[];
-};
-type vvv = {
+  variants: ProductVariant[];
+}
+
+interface ReviewAction {
+  type: string;
+  payload?: any;
+}
+
+interface AppContextValues {
   cartDrawerOpen: boolean;
-  setCartDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-
+  setCartDrawerOpen: (open: boolean) => void;
   showCartInDrawer: boolean;
-  setShowCartInDrawer: React.Dispatch<React.SetStateAction<boolean>>;
-
-  cartDrawercontent: prodtype | null;
-  setCartDrawercontent: React.Dispatch<React.SetStateAction<prodtype | null>>;
-  cart: cartcon | null;
-  setCart: React.Dispatch<React.SetStateAction<cartcon | null>>;
+  setShowCartInDrawer: (show: boolean) => void;
+  cartDrawerContent: Product | null;
+  setcartDrawerContent: (content: Product | null) => void;
+  cart: CartState | null;
+  setCart: (cart: CartState | null) => void;
   ReviewsList: any[];
-  dispatch: React.ActionDispatch<[action: any]>;
-};
-const appcontext = createContext<vvv | null>(null);
+  dispatchReviewsList: React.Dispatch<ReviewAction>;
+}
 
-export default function AppProvider({
-  children,
-  shopCart,
-}: {
+const AppContext = createContext<AppContextValues | null>(null);
+
+interface AppProviderProps {
   children: React.ReactNode;
   shopCart: string | null;
-}) {
-  const [cart, setCart] = useState<cartcon | null>(
+}
+
+export default function AppProvider({ children, shopCart }: AppProviderProps) {
+  const [cart, setCart] = useState<CartState | null>(
     shopCart ? JSON.parse(shopCart) : null
   );
-  const [cartDrawerOpen, setCartDrawerOpen] = useState<boolean>(false);
-  const [showCartInDrawer, setShowCartInDrawer] = useState<boolean>(false);
-  const [cartDrawercontent, setCartDrawercontent] = useState<prodtype | null>(
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+  const [showCartInDrawer, setShowCartInDrawer] = useState(false);
+  const [cartDrawerContent, setcartDrawerContent] = useState<Product | null>(
     null
   );
-  const [ReviewsList, dispatch] = useReducer(reviewsReducer, []);
+  const [ReviewsList, dispatchReviewsList] = useReducer(reviewsReducer, []);
+
+  // Memoize context value to prevent unnecessary re-renders
+  const contextValue = useMemo(
+    () => ({
+      cartDrawerOpen,
+      setCartDrawerOpen,
+      cartDrawerContent,
+      setcartDrawerContent,
+      showCartInDrawer,
+      setShowCartInDrawer,
+      cart,
+      setCart,
+      ReviewsList,
+      dispatchReviewsList,
+    }),
+    [cartDrawerOpen, cartDrawerContent, showCartInDrawer, cart, ReviewsList]
+  );
 
   return (
-    <appcontext.Provider
-      value={{
-        cartDrawerOpen,
-        setCartDrawerOpen,
-        cartDrawercontent,
-        setCartDrawercontent,
-        showCartInDrawer,
-        setShowCartInDrawer,
-        cart,
-        setCart,
-        ReviewsList,
-        dispatch,
-      }}
-    >
-      {children}
-    </appcontext.Provider>
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );
 }
 
 export const useAppContext = () => {
-  return useContext(appcontext) as vvv;
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("useAppContext must be used within an AppProvider");
+  }
+  return context;
 };

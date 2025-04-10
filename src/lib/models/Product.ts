@@ -164,6 +164,8 @@ class Product {
         }
       : null;
   }
+
+  
 }
 
 export default Product;

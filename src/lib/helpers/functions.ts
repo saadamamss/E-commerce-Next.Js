@@ -1,7 +1,3 @@
-import {
-  getParentCategory,
-  getRelatedCategory,
-} from "@/app/api/category/Category";
 import { prisma } from "@/prisma";
 
 export type searchParam = {
@@ -29,6 +25,7 @@ export type filterType = {
   maxprice: number;
 };
 
+// =========================================================================
 export function hpp(params: { [key: string]: string | string[] | undefined }) {
   return Object.keys(params)?.reduce((acc, i) => {
     acc[i] = Array.isArray(params[i]) ? params[i].pop() : params[i];
@@ -42,10 +39,12 @@ export function hpp(params: { [key: string]: string | string[] | undefined }) {
     maxprice?: string;
   };
 }
+// =========================================================================
 export const safeSplit = (str: string | undefined) => {
   return str ? str.trim().split("--") : undefined;
 };
 
+// =========================================================================
 export async function findPage(slug: string) {
   switch (slug) {
     case "shop":
@@ -68,29 +67,37 @@ export async function findPage(slug: string) {
   }
 }
 
-export async function productCategories(type: string, slug: string) {
-  switch (type) {
-    case "category":
-      return await getRelatedCategory(slug);
-
-    default:
-      return await getParentCategory();
-  }
-}
-
 export async function getCollectionProducts(id: string, maxcards: number) {
-
   const collection = await prisma.collections.findUnique({
     where: { id: parseInt(id) },
-    select: {
-      products: true,
-    },
   });
 
-  return collection?.products;
-}
+  if (collection && collection.type === "manual") {
+    /// find product collection
+    const data = await prisma.collections.findUnique({
+      where: { id: parseInt(id) },
+      select: {
+        products: true,
+      },
+    });
 
-// utils/csrf.ts
+    return data?.products ?? [];
+  }
+
+  ///else find product by collection conditions
+  if (collection && collection.type === "smart") {
+    //condition types *category , price , brand*
+    const collectionCond = collection.conditions as any;
+
+    const products = await prisma.product.findMany({
+      where: collectionCond,
+    });
+
+    return products;
+  }
+
+  return [];
+}
 
 /*
 function JsonToHtml({ json }) {
