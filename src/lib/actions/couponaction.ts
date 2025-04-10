@@ -11,15 +11,18 @@ export async function ApplyCoupon(prev: any, formdata: FormData) {
   if (!coupon_code) {
     return { error: "coupon code is required" };
   }
+  // 
   const coupon = await prisma.coupon.findUnique({
     where: {
       code: coupon_code,
       active: true,
     },
   });
+  // 
   if (!coupon) {
     return { error: "coupon code is invalid" };
   }
+  // 
   if (coupon.expDate < new Date()) {
     return { error: "coupon code is expired" };
   }
