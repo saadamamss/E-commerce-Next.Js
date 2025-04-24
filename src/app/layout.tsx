@@ -32,7 +32,7 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
   const cart = await getCart();
 
-  await sendResetPasswordEmail("saadamam@gmail.com" , "sjjksdhsjhsdklslsjdbhsbdsj");
+  
   return (
     <SessionProvider session={session}>
       <AppProvider shopCart={cart}>
