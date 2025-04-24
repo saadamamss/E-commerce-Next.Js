@@ -15,15 +15,7 @@ function CartPage() {
     return <EmptyCart />;
   }
 
-  //
-  const itemAttributes = useCallback((item: any): string[] => {
-    const { id, SKU, price, images, quantity, ...rest } = item;
-    Object.keys(rest).forEach((key) => {
-      if (!rest[key]) delete rest[key];
-    });
 
-    return Object.keys(rest);
-  }, []);
 
   return (
     <main className="pt-90">
@@ -83,14 +75,15 @@ function CartPage() {
                     <td>
                       <div className="shopping-cart__product-item__detail">
                         <h4>{item.name}</h4>
-
-                        <div className="text-slate-500">
-                          {itemAttributes(item.variant)?.map((attr) => (
-                            <span key={attr} className="d-block">
-                              <strong>{attr}:</strong> {item.variant[attr]}
-                            </span>
-                          ))}
-                        </div>
+                        {item.specs && (
+                          <div className="text-slate-500">
+                            {Object.keys(item.specs)?.map((attr) => (
+                              <span key={attr} className="d-block">
+                                <strong>{attr}:</strong> {item.specs[attr]}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </td>
                     <td>
@@ -103,7 +96,7 @@ function CartPage() {
                       <ItemQty
                         quantity={item.qty}
                         line={item.key}
-                        maxQty={item.variant.quantity}
+                        maxQty={item.availableQty}
                       />
                     </td>
                     <td>{Number(item.price * item.qty).toFixed(2)}</td>

@@ -29,7 +29,9 @@ export default async function VerifyEmail({
                 {/* <XCircle className="h-12 w-12 text-red-500" /> */}
               </div>
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Verification Failed</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              Verification Failed
+            </h2>
             <p className="text-gray-600 mb-6">
               This verification link is invalid or has expired
             </p>
@@ -45,7 +47,7 @@ export default async function VerifyEmail({
     );
   }
 
-  const verifyUser = await new Promise(async (resolve) => {
+  const verifyUser: any = await new Promise(async (resolve) => {
     try {
       const user = await prisma.user.update({
         where: { id: decode.userId as string },
@@ -66,14 +68,15 @@ export default async function VerifyEmail({
           <div className="p-8 text-center">
             <div className="flex justify-center mb-6">
               <div className="bg-yellow-100 p-4 rounded-full">
-                
                 {/* <XCircle className="h-12 w-12 text-yellow-500" /> */}
-
               </div>
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Something Went Wrong</h2>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              Something Went Wrong
+            </h2>
             <p className="text-gray-600 mb-6">
-              We encountered an issue verifying your email. Please try again later.
+              We encountered an issue verifying your email. Please try again
+              later.
             </p>
             <Link
               href="/"
@@ -87,8 +90,6 @@ export default async function VerifyEmail({
     );
   }
 
-  console.log(decode);
-  
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden animate-fade-in">
@@ -101,12 +102,18 @@ export default async function VerifyEmail({
               </div>
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Email Verified!</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            Email Verified!
+          </h1>
           <p className="text-gray-600 mb-4">
-            Hello <span className="font-semibold text-indigo-600">{verifyUser.email}</span>
+            Hello{" "}
+            <span className="font-semibold text-indigo-600">
+              {verifyUser.email}
+            </span>
           </p>
           <p className="text-gray-600 mb-6">
-            Your email has been successfully verified. You can now access all features.
+            Your email has been successfully verified. You can now access all
+            features.
           </p>
           <Link
             href="/"

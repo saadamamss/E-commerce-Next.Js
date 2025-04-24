@@ -30,24 +30,6 @@ export async function cancleOrder(prev: any, formData: FormData) {
       },
     });
 
-    // delete order
-    // await prisma.$transaction(async (prisma) => {
-    //   await prisma.orders.delete({
-    //     where: {
-    //       id: parseInt(orderId),
-    //     },
-    //   });
-    //   await prisma.orderitems.deleteMany({
-    //     where: {
-    //       orderId: parseInt(orderId),
-    //     },
-    //   });
-    //   await prisma.transaction.delete({
-    //     where: {
-    //       orderId: parseInt(orderId),
-    //     },
-    //   });
-    // });
     return { success: true, msg: "order canceled" };
   } catch (error) {
     console.log(error);

@@ -42,15 +42,11 @@ async function getOrder(id: number) {
         select: {
           id: true,
           qty: true,
+          price: true,
+          specs: true,
+          image: true,
           product: {
             select: { name: true },
-          },
-          variant: {
-            omit: {
-              createdAt: true,
-              updatedAt: true,
-              productId: true,
-            },
           },
         },
       },

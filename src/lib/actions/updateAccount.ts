@@ -39,7 +39,7 @@ export async function SaveChanges(prevstate: any, formData: FormData) {
   const validationResult = userDetailsUpdateSchema.safeParse(changes);
 
   if (!validationResult.success) {
-    console.log(validationResult.error.flatten().fieldErrors);
+    
     return {
       errors: validationResult.error.flatten().fieldErrors,
     };

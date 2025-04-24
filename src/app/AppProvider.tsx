@@ -27,7 +27,8 @@ interface CartItem {
   productId: number;
   qty: number;
   slug: string;
-  variant: ProductVariant;
+  variantId?: number;
+  specs: any;
 }
 
 interface CartState {

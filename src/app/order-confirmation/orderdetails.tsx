@@ -2,23 +2,13 @@
 import { destroyCookie } from "nookies";
 
 // Delete a cookie
-import { memo, useEffect, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo } from "react";
 
 export default memo(function Orderdetails({ details }: { details: string }) {
   const order = useMemo(() => JSON.parse(details), []);
   useEffect(() => {
     destroyCookie(null, "orderconfirm", { path: "/" });
   }, []);
-
-  const itemAttributes = (item: any): string[] => {
-    const { id, SKU, price, images, quantity, ...rest } = item;
-    Object.keys(rest).forEach((key) => {
-      if (!rest[key]) delete rest[key];
-    });
-
-    return Object.values(rest);
-  };
-
   //
 
   return (
@@ -107,11 +97,11 @@ export default memo(function Orderdetails({ details }: { details: string }) {
                           {item.product.name} (x{item.qty})
                         </span>
                         <p className="mb-0">
-                          {itemAttributes(item.variant)?.join(",")}
+                          {item.specs && Object.values(item.specs).join(",")}
                         </p>
                       </td>
                       <td align="right">
-                        EGP{Number(item.qty * item.variant.price).toFixed(2)}
+                        EGP{Number(item.qty * item.price).toFixed(2)}
                       </td>
                     </tr>
                   ))}

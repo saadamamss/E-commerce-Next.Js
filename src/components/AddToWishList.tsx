@@ -20,7 +20,6 @@ export default memo(function AddToWishlist({
         const indx = cookie.wishlist.indexOf(productId);
         cookie.wishlist.splice(indx, 1);
         setWishlistCookie("wishlist", cookie.wishlist);
-        console.log(cookie.wishlist);
 
         return;
       }

@@ -1,9 +1,5 @@
 import { notFound } from "next/navigation";
-import {
-  findPage,
-  hpp,
-  searchParam,
-} from "@/lib/helpers/functions";
+import { findPage, hpp, searchParam } from "@/lib/helpers/functions";
 import PageBuilder from "@/components/PageBuilder";
 import FilterComponent from "@/components/FilterComponent";
 import Pagination from "@/components/Pagination";
@@ -197,7 +193,7 @@ export default async function ShowProducts({
                       <span className="money">EGP{Number(product.price)}</span>
                     </div>
 
-                    <AddToWishList productId={product.id}/>
+                    <AddToWishList productId={product.id} />
                   </div>
                 </div>
               </div>

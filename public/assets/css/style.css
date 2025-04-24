@@ -13600,10 +13600,11 @@ textarea.form-control.is-invalid {
 .pc__img-wrapper {
   display: block;
   position: relative;
-  height: 0;
+  height: 0px;
   padding-top: 121.212122%;
   overflow: hidden;
 }
+
 .pc__img-wrapper .pc__btn-wl {
   top: 1rem;
   right: 1rem;
@@ -18340,6 +18341,10 @@ header .logo {
 }
 .product-single__media.vertical-dot .product-single__image .swiper-container {
   position: static;
+
+}
+.pc__img-wrapper .swiper-container{
+  position: absolute !important;
 }
 .product-single__media.vertical-dot .product-single__image .swiper-wrapper {
   margin-bottom: 1rem;

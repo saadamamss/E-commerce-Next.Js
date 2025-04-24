@@ -76,8 +76,6 @@ export async function POST(request: Request) {
     updatedCart.total = updatedCart.subTotal;
     //  check if coupon applied
 
-    console.log(updatedCart);
-
     if (cartdecoded.couponApplied) {
       const coupon = await isCouponStillValid(cartdecoded);
       if (coupon) {

@@ -3,20 +3,14 @@ import DetailsForm from "./components/DetailsForm";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "../AppProvider";
+import { useCallback } from "react";
 
 export default function CheckoutPage() {
   const { cart } = useAppContext();
   const router = useRouter();
   if (!cart) router.replace("/sign-in", { scroll: true });
 
-  const itemAttributes = (item: any): string[] => {
-    const { id, SKU, price, images, quantity, ...rest } = item;
-    Object.keys(rest).forEach((key) => {
-      if (!rest[key]) delete rest[key];
-    });
 
-    return Object.keys(rest);
-  };
 
   return (
     <main className="pt-90">
@@ -80,12 +74,16 @@ export default function CheckoutPage() {
                                 {item.name} (x{item.qty})
                               </span>
                               <div className="text-slate-500">
-                                {itemAttributes(item.variant)?.map((attr) => (
-                                  <span key={attr} className="d-block">
-                                    <strong>{attr}:</strong>{" "}
-                                    {item.variant[attr]}
-                                  </span>
-                                ))}
+                                {item.specs && (
+                                  <div className="text-slate-500">
+                                    {Object.keys(item.specs)?.map((attr) => (
+                                      <span key={attr} className="d-block">
+                                        <strong>{attr}:</strong>{" "}
+                                        {item.specs[attr]}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                               <span className="d-block text-red font-bold">
                                 EGP{item.qty * item.price}

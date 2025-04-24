@@ -21,7 +21,6 @@ interface menuMap extends menuLevel2 {
 export async function getRelatedCategory(slug: string) {
   const categories: { f0: number; f1: string; f2: string }[] =
     await prisma.$queryRaw`CALL GetCategoryTree(${slug})`;
-  console.log(categories);
 
   categories.shift();
 

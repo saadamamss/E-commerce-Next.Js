@@ -66,7 +66,7 @@ export default function Page() {
     // empty errors
     setErrors({});
     formAction(formData);
-    console.log(state?.success);
+    
   }
   const { update: updateSession } = useSession();
   useEffect(() => {

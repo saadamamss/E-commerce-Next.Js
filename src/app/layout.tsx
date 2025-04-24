@@ -5,11 +5,14 @@ import "../../public/assets/css/plugins/swiper.min.css";
 import "../../public/assets/css/style.css";
 import "../../public/assets/css/custom.css";
 import "bootstrap-icons/font/bootstrap-icons.min.css";
+
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import CartOverlay from "@/components/CartOverlay";
 import AppProvider from "./AppProvider";
 import { getCart } from "@/lib/models/Cart";
+import { sendResetPasswordEmail } from "@/lib/helpers/mails";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,6 +32,7 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
   const cart = await getCart();
 
+  await sendResetPasswordEmail("saadamam@gmail.com" , "sjjksdhsjhsdklslsjdbhsbdsj");
   return (
     <SessionProvider session={session}>
       <AppProvider shopCart={cart}>

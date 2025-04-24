@@ -68,7 +68,9 @@ export const removeCartItem = async (line: string) => {
 // =============================================================================
 
 export const MappingCartItems = async (cart: cartType) => {
-  return await Promise.all(
+  if (!cart.items.length) return [];
+
+  const items = await Promise.all(
     cart.items.map(async (item) => {
       const iteminfo = await prisma.product.findUnique({
         where: {
@@ -84,6 +86,7 @@ export const MappingCartItems = async (cart: cartType) => {
           quantity: true,
         },
       });
+      if (!iteminfo) return null;
       const variant = await prisma.variants.findUnique({
         where: { id: item.variantId },
         omit: {
@@ -94,20 +97,32 @@ export const MappingCartItems = async (cart: cartType) => {
       });
       return {
         key: item.key,
-        productId: iteminfo?.id,
-        SKU: variant ? variant.SKU : iteminfo?.SKU,
-        name: iteminfo?.name,
-        slug: iteminfo?.slug,
+        productId: iteminfo.id,
+        SKU: variant ? variant.SKU : iteminfo.SKU,
+        name: iteminfo.name,
+        slug: iteminfo.slug,
         price: variant ? variant.price : iteminfo?.price,
         image: variant
           ? variant.images?.split(",")[0]
-          : iteminfo?.images?.split(",")[0],
-        variant: variant,
+          : iteminfo.images?.split(",")[0],
+        variantId: variant?.id,
+        specs: variant ? itemAttributes(variant) : null,
         qty: item.qty,
-        availableQty: variant ? variant.quantity : iteminfo?.quantity,
+        availableQty: variant ? variant.quantity : iteminfo.quantity,
       };
     })
   );
+
+  return items.filter((i) => i !== null);
+};
+
+const itemAttributes = (item: any) => {
+  const { id, SKU, price, images, quantity, ...rest } = item;
+  Object.keys(rest).forEach((key) => {
+    if (!rest[key]) delete rest[key];
+  });
+
+  return Object.keys(rest).length ? rest : null;
 };
 
 // =============================================================================

@@ -99,6 +99,9 @@ export async function getCollectionProducts(id: string, maxcards: number) {
   return [];
 }
 
+
+
+
 /*
 function JsonToHtml({ json }) {
   return json.map((element, index) => {

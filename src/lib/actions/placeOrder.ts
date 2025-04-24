@@ -7,6 +7,7 @@ import { prisma } from "@/prisma";
 import { auth } from "@/auth";
 import { sendOrderTracking } from "../helpers/mails";
 import { verifyCsrfToken } from "../utils/csrfVerify";
+import { MappingCartItems } from "../models/Cart";
 
 // Define the schema for form validation
 const orderSchema = z.object({
@@ -17,12 +18,24 @@ const orderSchema = z.object({
   name: z
     .string({ required_error: "Name is required" })
     .max(50, { message: "Name must be 50 characters or fewer" }),
-  country: z.string({ required_error: "Country is required" }),
-  city: z.string({ required_error: "City is required" }),
-  province: z.string({ required_error: "Province is required" }),
-  address_1: z.string({ required_error: "Address line 1 is required" }),
-  address_2: z.string({ required_error: "Address line 2 is required" }),
-  zipCode: z.string({ required_error: "Zip code is required" }),
+  country: z
+    .string({ required_error: "Country is required" })
+    .min(1, { message: "this field is required !" }),
+  city: z
+    .string({ required_error: "City is required" })
+    .min(1, { message: "this field is required !" }),
+  province: z
+    .string({ required_error: "Province is required" })
+    .min(1, { message: "this field is required !" }),
+  address_1: z
+    .string({ required_error: "Address line 1 is required" })
+    .min(1, { message: "this field is required !" }),
+  address_2: z
+    .string({ required_error: "Address line 2 is required" })
+    .optional(),
+  zipCode: z
+    .string({ required_error: "Zip code is required" })
+    .min(1, { message: "this field is required !" }),
   payment_method: z.enum(["DBT", "COD", "PAYPAL"], {
     message: "Please choose a valid payment method",
   }),
@@ -45,13 +58,15 @@ function decodeCartToken(cartToken: string) {
 }
 
 // Helper function to map cart items
-function mapCartItems(
-  cartItems: { productId: number; variantId: number; qty: number }[]
-) {
-  return cartItems.map((item) => ({
+async function mapCartItems(cart: any) {
+  const items = await MappingCartItems(cart);
+  return items.map((item) => ({
     productId: item.productId,
     variantId: item.variantId,
     qty: item.qty,
+    price: item.price,
+    image: item.image,
+    specs: item.specs,
   }));
 }
 
@@ -61,6 +76,7 @@ export async function PlaceOrder(prevState: any, formData: FormData) {
   if (!csrfToken || !verifyCSRF) {
     return { error: 500, msg: "somthing went wrong!" };
   }
+
   // Extract form data
   const formDataObject = {
     email: formData.get("email")?.toString(),
@@ -111,7 +127,7 @@ export async function PlaceOrder(prevState: any, formData: FormData) {
     }
 
     // Map cart items
-    const orderItems = mapCartItems(decodedCart.items);
+    const orderItems = await mapCartItems(decodedCart);
 
     // Create the order in the database
     const order = await prisma.$transaction(async (prisma) => {
@@ -164,7 +180,8 @@ export async function PlaceOrder(prevState: any, formData: FormData) {
             select: {
               qty: true,
               product: { select: { name: true } },
-              variant: true,
+              price: true,
+              specs: true,
             },
           },
         },
@@ -172,12 +189,29 @@ export async function PlaceOrder(prevState: any, formData: FormData) {
 
       // Update variant quantities
       for (const item of orderItems) {
-        await prisma.variants.update({
-          where: { id: item.variantId },
+        let updateVariantQty = {};
+        if (item.variantId) {
+          updateVariantQty = {
+            variants: {
+              update: {
+                where: { id: item.variantId },
+                data: {
+                  quantity: {
+                    decrement: item.qty,
+                  },
+                },
+              },
+            },
+          };
+        }
+        
+        await prisma.product.update({
+          where: { id: item.productId },
           data: {
             quantity: {
               decrement: item.qty,
             },
+            ...updateVariantQty,
           },
         });
       }

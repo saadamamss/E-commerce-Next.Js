@@ -6,6 +6,11 @@ import { useAppContext } from "@/app/AppProvider";
 import Image from "next/image";
 import AddToWishList from "@/components/AddToWishList";
 
+interface subAttrs {
+  type: string;
+  values: string[];
+}
+
 const AddToCart = memo(function AddToCart({ product }: { product: string }) {
   const prod = JSON.parse(product);
   const [quantity, setQuantity] = useState(1);
@@ -15,7 +20,7 @@ const AddToCart = memo(function AddToCart({ product }: { product: string }) {
 
   // =============================================================================
   const subAttributes: { type: string; values: string[] }[] = useMemo(() => {
-    const values = prod.variants?.reduce((acc, variant) => {
+    const values = prod.variants?.reduce((acc: subAttrs[], variant: any) => {
       const { id, SKU, quantity, images, price, ...rest } = variant;
       Object.keys(rest).forEach((key) => {
         if (!rest[key]) return;
@@ -30,7 +35,7 @@ const AddToCart = memo(function AddToCart({ product }: { product: string }) {
       });
 
       return acc;
-    }, [] as { type: string; values: string[] }[]);
+    }, [] as subAttrs[]);
 
     return values;
   }, []);
@@ -44,14 +49,14 @@ const AddToCart = memo(function AddToCart({ product }: { product: string }) {
 
   const avaliableAttributes = useMemo(() => {
     return prod.variants.filter(
-      (i) => i[prod.variantType] == variantAttributes[prod.variantType]
+      (i: any) => i[prod.variantType] == variantAttributes[prod.variantType]
     );
   }, [variantAttributes]);
 
   const isAvailableAttr = useCallback(
     (attribute: string, value: string): boolean => {
       return !!avaliableAttributes.find(
-        (i) => i[attribute] && i[attribute] === value
+        (i: any) => i[attribute] && i[attribute] === value
       );
     },
     [avaliableAttributes]
@@ -59,7 +64,9 @@ const AddToCart = memo(function AddToCart({ product }: { product: string }) {
 
   const selectedVariant = useMemo(() => {
     const variant = subAttributes.reduce((acc, attr): any[] => {
-      acc = acc.filter((i) => i[attr.type] == variantAttributes[attr.type]);
+      acc = acc.filter(
+        (i: any) => i[attr.type] == variantAttributes[attr.type]
+      );
       return acc;
     }, avaliableAttributes);
 
@@ -69,7 +76,7 @@ const AddToCart = memo(function AddToCart({ product }: { product: string }) {
   // Memoize image for the selected color
   const MainAttrImage = useCallback(({ value }: { value: string }) => {
     const image = prod.variants
-      ?.find((k) => k[prod.variantType] === value)
+      ?.find((k: any) => k[prod.variantType] === value)
       ?.images?.split(",")[0];
     return (
       <Image
@@ -97,10 +104,10 @@ const AddToCart = memo(function AddToCart({ product }: { product: string }) {
   const ImageInSide = useCallback(() => {
     const images =
       prod.variants?.find(
-        (k) => k[prod.variantType] === variantAttributes[prod.variantType]
+        (k: any) => k[prod.variantType] === variantAttributes[prod.variantType]
       )?.images ?? prod.images;
 
-    return images?.split(",").map((img, indx) => (
+    return images?.split(",").map((img: string, indx: number) => (
       <div
         className="swiper-slide product-single__image-item"
         style={{ height: "auto" }}
@@ -131,8 +138,9 @@ const AddToCart = memo(function AddToCart({ product }: { product: string }) {
     }
 
     const item = cart?.items.find(
-      (i) => i.productId == prod.id && i.variant.id == selectedVariant.id
+      (i) => i.productId == prod.id && i.variantId == selectedVariant.id
     );
+
     if (item && item.qty + quantity > selectedVariant?.quantity) {
       setError("No more items to add in the cart! ");
       return;

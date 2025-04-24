@@ -6,8 +6,6 @@ export default async function Home() {
   const pageFound = await findPage("/");
   // if page not found
   if (!pageFound) return notFound();
-
-  
   const sections = pageFound?.content as object;
   return <PageBuilder sections={sections} />;
 }

@@ -18,21 +18,15 @@ export default async function OrderDetails({
         select: {
           id: true,
           qty: true,
+          price: true,
+          image: true,
+          specs: true,
           product: {
             select: {
               name: true,
               brand: {
                 select: { name: true },
               },
-            },
-          },
-          varinat: {
-            select: {
-              price: true,
-              attr_1: true,
-              attr_2: true,
-              attr_3: true,
-              images: true,
             },
           },
         },
@@ -44,6 +38,7 @@ export default async function OrderDetails({
   if (!order) {
     return notFound();
   }
+
 
   return (
     <div className="col-lg-9">
@@ -118,9 +113,7 @@ export default async function OrderDetails({
                   <td className="pname">
                     <div className="image">
                       <Image
-                        src={`/assets/images/products/${
-                          item.varinat.images?.split(",")[0]
-                        }`}
+                        src={`/assets/images/products/${item.image}`}
                         width={100}
                         height={100}
                         alt=""
@@ -136,17 +129,19 @@ export default async function OrderDetails({
                       >
                         {item.product.name}
                       </Link>
-                      {item.varinat && (
-                        <p className="mb-0">
-                          {item.varinat.attr_1} , {item.varinat.attr_2} ,{" "}
-                          {item.varinat.attr_3}
-                        </p>
-                      )}
+                      <div className="text-slate-500">
+                        
+                        {item.specs &&
+                          Object.keys(item.specs).map((attr) => (
+                            <span key={attr} className="d-block">
+                              <strong>{attr}:</strong>{" "}
+                              {(item.specs as { [key: string]: any })[attr]}
+                            </span>
+                          ))}
+                      </div>
                     </div>
                   </td>
-                  <td className="text-center">
-                    EGP{item.varinat.price.toString()}
-                  </td>
+                  <td className="text-center">EGP{item.price.toString()}</td>
                   <td className="text-center">{item.qty}</td>
                   <td className="text-center">{item.product.brand?.name}</td>
                   <td className="text-center">No</td>

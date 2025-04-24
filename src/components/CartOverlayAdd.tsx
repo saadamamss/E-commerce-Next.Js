@@ -133,7 +133,7 @@ const CartOverlayAdd = memo(function CartOverlayAdd() {
     }
 
     const item = cart?.items.find(
-      (i) => i.productId == prod.id && i.variant.id == selectedVariant.id
+      (i) => i.productId == prod.id && i.variantId == selectedVariant.id
     );
     if (item && item.qty + quantity > selectedVariant?.quantity) {
       setError("No more items to add in the cart! ");
