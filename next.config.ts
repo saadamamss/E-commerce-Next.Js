@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import { createSecureHeaders } from "next-secure-headers";
 const nextConfig: NextConfig = {
+  output: "standalone",
   /* config options here */
   images: {
     domains: ["avatars.githubusercontent.com"],
