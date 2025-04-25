@@ -621,7 +621,10 @@ export default async function Header() {
                 )}
               </div>
 
-              <Link href="/wishlist" className="header-tools__item header-tools__wishlist">
+              <Link
+                href="/wishlist"
+                className="header-tools__item header-tools__wishlist"
+              >
                 <svg
                   width="20"
                   height="20"
