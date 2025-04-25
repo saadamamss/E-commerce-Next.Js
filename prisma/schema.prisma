@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:@localhost:3306/nextjs"
+  url      = "mysql://u9xwrmcwgc5dc3aj:jH01D8pziKTOxkK8iCwG@bjdg4tqyixmy9az3s9s8-mysql.services.clever-cloud.com:3306/bjdg4tqyixmy9az3s9s8"
 }
 
 model user {
@@ -141,8 +141,8 @@ model orderitems {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  order   orders   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  order   orders    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   variant variants? @relation(fields: [variantId], references: [id], onDelete: Cascade)
 
   @@index([orderId, productId, variantId])
